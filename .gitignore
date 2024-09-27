@@ -1,3 +1,7 @@
+flask-app/.env
+flask-app/.flaskenv
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
