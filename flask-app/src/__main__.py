@@ -3,6 +3,7 @@ from flask import Flask
 from app import middlewares, routes
 from config import load_config
 from database.session import create_session_maker
+from app.services.pager_duty.pager_duty_service import PagerDutyService
 
 
 def main() -> Flask:
@@ -14,16 +15,21 @@ def main() -> Flask:
     middlewares.register(app, session_maker)
     routes.register(app)
 
-    print("!!!")
-    print(config.app_config.app_port)
-    print("!!!")
+    # with app.app_context():
+    #     pager_duty_client = PagerDutyService()
+    #     pager_duty_client.setup(config)
 
-    return app
+    return (app, config)
 
 
 def run():
-    app = main()
-    app.run(host="0.0.0.0", port=3000, debug=True)
+    app, config = main()
+    app.run(
+        host=config.app_config.app_host,
+        port=config.app_config.app_port,
+        debug=config.app_config.debug,
+        # debug=False,
+    )
 
 
 if __name__ == "__main__":

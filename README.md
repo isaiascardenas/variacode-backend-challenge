@@ -15,7 +15,7 @@ To build the Docker image, follow these steps:
 3. Run the following command:
 
    ```bash
-   docker build -t flask-app:latest -f Dockerfile .
+   docker-compose up --build
    ```
 
 ### Environment Variables
@@ -56,4 +56,3 @@ docker run -p 8080:8080 flask-app:latest
 Visit [http://localhost:8080/](http://localhost:8080/) in your browser to see the Flask app.
 
 Note: You can customize the port and tag as needed.
-

@@ -6,6 +6,7 @@ class AppConfig:
     debug: bool
     app_name: str
     app_port: int
+    app_host: str
 
 
 @dataclass
@@ -35,6 +36,13 @@ class DatabaseConfig:
 
 
 @dataclass
+class PagerDutyConfig:
+    api_key: str
+    api_endpoint: str
+
+
+@dataclass
 class Config:
     app_config: AppConfig
     db_config: DatabaseConfig
+    pager_duty_config: PagerDutyConfig

@@ -14,4 +14,4 @@ services:
       MYSQL_DATABASE: "pager_duty"
       MYSQL_ROOT_PASSWORD: "root"
     ports:
-      - "3306:3306"
+      - "3301:3306"

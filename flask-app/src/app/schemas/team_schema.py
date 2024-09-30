@@ -1,16 +1,15 @@
 from pydantic import BaseModel, ConfigDict
 
 
-class UserCreate(BaseModel):
+class TeamCreate(BaseModel):
     name: str
-    email: str | None
 
 
-class User(UserCreate):
+class Team(TeamCreate):
     id: str
 
     model_config = ConfigDict(from_attributes=True)
 
 
-class UserUpdate(UserCreate):
+class TeamUpdate(TeamCreate):
     pass

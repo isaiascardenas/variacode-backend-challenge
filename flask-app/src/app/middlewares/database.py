@@ -10,9 +10,11 @@ class DatabaseMiddleware:
         session = self.session_maker()
         g.session = session
 
-    # noinspection PyMethodMayBeStatic
     def close(self, *_args, **_kwargs):
-        g.session.close()
+        db_session = g.pop("session", None)
+
+        if db_session is not None:
+            db_session.close()
 
     def register(self, app: Flask):
         app.before_request(self.open)

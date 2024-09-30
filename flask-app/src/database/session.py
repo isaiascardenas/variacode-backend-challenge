@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm.session import sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 
 def create_session_maker(database_url: str) -> sessionmaker:
@@ -12,4 +12,5 @@ def create_session_maker(database_url: str) -> sessionmaker:
             "connect_timeout": 5,
         },
     )
-    return sessionmaker(engine, autoflush=False, expire_on_commit=False)
+
+    return scoped_session(sessionmaker(engine, autoflush=False, expire_on_commit=False))

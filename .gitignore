@@ -1,6 +1,8 @@
 flask-app/.env
 flask-app/.flaskenv
 
+flask-app/.env.local
+flask-app/.env.docker
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
