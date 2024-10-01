@@ -1,11 +1,23 @@
 services:
-  python-app:
-    build: ./flask-app/
+  react-app:
+    build: ./frontend/
+    ports:
+      - "4000:80"
+    networks:
+      - react-flask
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend/
     command: sh -c "sleep 10s ; python3 src"
     ports:
       - "3000:3000"
     depends_on:
       - mysql
+    networks:
+      - react-flask
+      - flask-mysql
 
   mysql:
     build: ./database/
@@ -15,3 +27,9 @@ services:
       MYSQL_ROOT_PASSWORD: "root"
     ports:
       - "3301:3306"
+    networks:
+      - flask-mysql
+
+networks:
+  react-flask: {}
+  flask-mysql: {}
