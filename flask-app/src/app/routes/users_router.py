@@ -22,15 +22,3 @@ def store_user():
     )
 
     return user.model_dump(mode="json")
-
-
-@user_blueprint.route("/test")
-def test_endpoint():
-    # pager_duty_client = PagerDutyService(access_token="u+b4CCjDZsXfuxx-w_fw")
-
-    # response = pager_duty_client.fetch_users()
-    # response = pager_duty_client.fetch_services()
-    # response = pager_duty_client.fetch_incidents()
-    # response = pager_duty_client.seed_users()
-
-    return "<h1>Done!</h1>"
