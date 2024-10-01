@@ -1,9 +1,10 @@
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
 
 
 class ServiceCreate(BaseModel):
     name: str
-    team_id: str
+    team_id: Optional[str] = None
     escalation_policy_id: str
 
 

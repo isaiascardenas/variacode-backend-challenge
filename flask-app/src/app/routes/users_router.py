@@ -1,7 +1,6 @@
-from flask import Blueprint, g
+from flask import Blueprint, Response, g
 
 from app.controllers.users_controller import UsersController
-from app.services.pager_duty.pager_duty_service import PagerDutyService
 
 user_blueprint = Blueprint("user", __name__, url_prefix="/users")
 
@@ -22,3 +21,23 @@ def store_user():
     )
 
     return user.model_dump(mode="json")
+
+
+@user_blueprint.route("/show")
+def show():
+    return """
+        <html><body>
+        Users report. <a href="/users/report">download</a>
+        </body></html>
+        """
+
+
+@user_blueprint.route("/report")
+def download():
+    csv = "1,2,3\n4,5,6\n"
+
+    return Response(
+        csv,
+        mimetype="text/csv",
+        headers={"Content-disposition": "attachment; filename=myplot.csv"},
+    )

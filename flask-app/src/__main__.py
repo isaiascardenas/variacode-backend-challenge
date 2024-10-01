@@ -1,4 +1,5 @@
 from flask import Flask
+import asyncio
 
 from app import middlewares, routes
 from config import load_config
@@ -15,9 +16,9 @@ def main() -> Flask:
     middlewares.register(app, session_maker)
     routes.register(app)
 
-    with app.app_context():
-        pager_duty_client = PagerDutyService()
-        pager_duty_client.setup(config)
+    # with app.app_context():
+    #     pager_duty_client = PagerDutyService()
+    #     asyncio.run(pager_duty_client.setup(config))
 
     return (app, config)
 
@@ -27,8 +28,8 @@ def run():
     app.run(
         host=config.app_config.app_host,
         port=config.app_config.app_port,
-        # debug=config.app_config.debug,
-        debug=False,
+        debug=config.app_config.debug,
+        # debug=False,
     )
 
 

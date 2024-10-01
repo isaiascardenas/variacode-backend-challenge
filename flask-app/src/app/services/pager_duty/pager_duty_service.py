@@ -1,8 +1,9 @@
+import asyncio
 from sqlalchemy.sql import text
 from config.models import (
     Config,
 )
-from ..requests_client import RequestsClient
+from .requests_client import RequestsClient
 from database.session import create_session_maker
 from app.models.user import User
 from app.models.team import Team
@@ -12,40 +13,54 @@ from app.models.escalation_policy import EscalationPolicy
 
 
 class PagerDutyService:
-    client: RequestsClient
     base_url: str
+    api_key: str
 
     PAGE_SIZE = 10
 
-    def setup(self, config: Config):
+    async def setup(self, config: Config):
         self.base_url = config.pager_duty_config.api_endpoint
-        self.client = RequestsClient(
-            self.base_url, access_token=config.pager_duty_config.api_key
-        )
+        self.api_key = config.pager_duty_config.api_key
+
         db_session = create_session_maker(config.db_config.full_url)
 
-        self.seed_teams(db_session)
-        self.seed_users(db_session)
-        self.seed_escalation_policies(db_session)
-        self.seed_services(db_session)
-        self.seed_incidents(db_session)
+        await self.seed_teams(db_session)
+        await self.seed_users(db_session)
+        await self.seed_escalation_policies(db_session)
+        await self.seed_services(db_session)
+        await self.seed_incidents(db_session)
 
     def fetch_teams(self, params):
-        return self.client.get("/teams", query_params=params)
+        return RequestsClient(self.base_url, access_token=self.api_key).get(
+            "/teams",
+            query_params=params,
+        )
 
     def fetch_users(self, params):
-        return self.client.get("/users", query_params=params)
+        return RequestsClient(self.base_url, access_token=self.api_key).get(
+            "/users",
+            query_params=params,
+        )
 
     def fetch_services(self, params):
-        return self.client.get("/services", query_params=params)
+        return RequestsClient(self.base_url, access_token=self.api_key).get(
+            "/services",
+            query_params=params,
+        )
 
     def fetch_incidents(self, params):
-        return self.client.get("/incidents", query_params=params)
+        return RequestsClient(self.base_url, access_token=self.api_key).get(
+            "/incidents",
+            query_params=params,
+        )
 
     def fetch_escalation_policies(self, params):
-        return self.client.get("/escalation_policies", query_params=params)
+        return RequestsClient(self.base_url, access_token=self.api_key).get(
+            "/escalation_policies",
+            query_params=params,
+        )
 
-    def seed_teams(self, db_session):
+    async def seed_teams(self, db_session):
         offset = 0
         total = 1  # set total = 1 to force firt iteration
 
@@ -56,9 +71,11 @@ class PagerDutyService:
                 "offset": offset,
             }
 
-            response = self.fetch_teams(query_params).json()
-            total = response["total"]
-            records = response["teams"]
+            response = await asyncio.gather(self.fetch_teams(query_params))
+            data = await response[0].json()
+
+            total = data["total"]
+            records = data["teams"]
 
             offset += len(records)
 
@@ -73,7 +90,7 @@ class PagerDutyService:
 
             db_session.commit()
 
-    def seed_users(self, db_session):
+    async def seed_users(self, db_session):
         offset = 0
         total = 1  # set total = 1 to force firt iteration
 
@@ -84,9 +101,11 @@ class PagerDutyService:
                 "offset": offset,
             }
 
-            response = self.fetch_users(query_params).json()
-            total = response["total"]
-            records = response["users"]
+            response = await asyncio.gather(self.fetch_users(query_params))
+            data = await response[0].json()
+
+            total = data["total"]
+            records = data["users"]
 
             offset += len(records)
 
@@ -109,7 +128,7 @@ class PagerDutyService:
                     )
                     db_session.commit()
 
-    def seed_services(self, db_session):
+    async def seed_services(self, db_session):
         offset = 0
         total = 1  # set total = 1 to force firt iteration
 
@@ -120,9 +139,11 @@ class PagerDutyService:
                 "offset": offset,
             }
 
-            response = self.fetch_services(query_params).json()
-            total = response["total"]
-            records = response["services"]
+            response = await asyncio.gather(self.fetch_services(query_params))
+            data = await response[0].json()
+
+            total = data["total"]
+            records = data["services"]
 
             offset += len(records)
 
@@ -142,7 +163,7 @@ class PagerDutyService:
                 db_session.add(model)
                 db_session.commit()
 
-    def seed_incidents(self, db_session):
+    async def seed_incidents(self, db_session):
         offset = 0
         total = 1  # set total = 1 to force firt iteration
 
@@ -153,9 +174,11 @@ class PagerDutyService:
                 "offset": offset,
             }
 
-            response = self.fetch_incidents(query_params).json()
-            total = response["total"]
-            records = response["incidents"]
+            response = await asyncio.gather(self.fetch_incidents(query_params))
+            data = await response[0].json()
+
+            total = data["total"]
+            records = data["incidents"]
 
             offset += len(records)
 
@@ -172,7 +195,7 @@ class PagerDutyService:
                 db_session.add(model)
                 db_session.commit()
 
-    def seed_escalation_policies(self, db_session):
+    async def seed_escalation_policies(self, db_session):
         offset = 0
         total = 1  # set total = 1 to force firt iteration
 
@@ -183,9 +206,13 @@ class PagerDutyService:
                 "offset": offset,
             }
 
-            response = self.fetch_escalation_policies(query_params).json()
-            total = response["total"]
-            records = response["escalation_policies"]
+            response = await asyncio.gather(
+                self.fetch_escalation_policies(query_params)
+            )
+            data = await response[0].json()
+
+            total = data["total"]
+            records = data["escalation_policies"]
 
             offset += len(records)
 
