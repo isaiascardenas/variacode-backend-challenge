@@ -1,22 +1,35 @@
 # variacode-backend-challenge
 
-This Docker image contains a simple Flask web application that displays the hostname and IP address of the container. The application consists of an index page and an error page.
+### by isaiascardenas
+
+This repository contains a Flask back-end application for the `PagerDuty Customer Success Group Innovation Team
+Back End Take Home Exercise`. The setup includes 2 Docker images:
+
+- python3.10: For the Flask app
+- mysql.9.0.1: For the database
+
+The project run using the configuration stored in the `docker-compose.yml` file
 
 ## Prerequisites
 
 - Docker installed on your machine ([Install Docker](https://docs.docker.com/get-docker/))
 
-## Building the Docker Image
+## Setup
 
-To build the Docker image, follow these steps:
+First we need to setup the environment variables used by the Flask application.
 
 1. Open a terminal.
-2. Navigate to the directory containing your Dockerfile and source code.
-3. Run the following command:
+2. Navigate to the `backend/` directory
+3. Create a `.env` file and copy the `.env.example` content
+4. Navigate to the root directory, you should see `docker-compose.yml` file
+5. Run the following command:
 
    ```bash
    docker-compose up --build
    ```
+
+6. Wait for the setup ...
+7. The Flask application runs on [http://localhost:3000/](http://localhost:3000/)
 
 ### Environment Variables
 
@@ -25,34 +38,8 @@ We set environment variables to configure Python behavior:
 - `PYTHONDONTWRITEBYTECODE`: Prevents Python from writing pyc files to disk.
 - `PYTHONUNBUFFERED`: Ensures Python output is sent directly to terminal without buffering.
 
-### Working Directory
+### API endpoints
 
-We create and set the working directory inside the container to `/app`.
+The Flask backend application has the following endpoints:
 
-### Install Dependencies
-
-We copy only the `requirements.txt` file first to leverage Docker caching and install Python dependencies.
-
-### Copy Source Code
-
-We copy the entire application source code to the working directory.
-
-### Expose Port
-
-We expose port 8080, the port on which the Flask application will run.
-
-### Command to Run
-
-We specify the command to run on container start: `python src/app.py`.
-
-## Running the Docker Container
-
-To run the Docker container, execute the following command:
-
-```bash
-docker run -p 8080:8080 flask-app:latest
-```
-
-Visit [http://localhost:8080/](http://localhost:8080/) in your browser to see the Flask app.
-
-Note: You can customize the port and tag as needed.
+- `/dashboard/services`:
