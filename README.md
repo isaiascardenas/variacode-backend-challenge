@@ -169,6 +169,83 @@ The `total` attribute contains the total records.
 
 The `escalation_policies` attribute contains the Escalation policies array.
 
+
+### Services report
+
+CSV report for all Services
+
+```http
+GET /reports/services
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|           |      |             |
+
+
+Response: `csv file`
+
+### Services with Incidents report
+
+CSV report for all Services with their related Incidents
+
+```http
+GET /reports/services/incidents
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|           |      |             |
+
+
+Response: `csv file`
+
+### Incidents report
+
+CSV report for all Incidents filtered by `status` or `service_id`
+
+```http
+GET /reports/incidents?search_by={value}&search_value={value}
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|  `search_by` | `string` |  **Optional**. Allowed values: `status`, `service_id` |
+|  `search_value` | `string` |  **Optional**. An Incident's status or a Service id |
+
+
+Response: `csv file`
+
+### Teams with Services report
+
+CSV report for all Teams with their related Services
+
+```http
+GET /reports/teams/services
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|           |      |             |
+
+Response: `csv file`
+
+
+### Escalation Policies report
+
+CSV report for all Escalation policies with their related Teams and Services
+
+```http
+GET /reports/escalation_policies
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|           |      |             |
+
+Response: `csv file`
+
+
 <br/>
 <br/>
 <i>by isaiascardenas</i>
