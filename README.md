@@ -1,7 +1,5 @@
 # variacode-backend-challenge
 
-### by isaiascardenas
-
 This repository contains a Flask back-end application for the `PagerDuty Customer Success Group Innovation Team
 Back End Take Home Exercise`. The setup includes 2 Docker images:
 
@@ -31,15 +29,42 @@ First we need to setup the environment variables used by the Flask application.
 6. Wait for the setup ...
 7. The Flask application runs on [http://localhost:3000/](http://localhost:3000/)
 
-### Environment Variables
+## Environment Variables
 
 We set environment variables to configure Python behavior:
 
 - `PYTHONDONTWRITEBYTECODE`: Prevents Python from writing pyc files to disk.
 - `PYTHONUNBUFFERED`: Ensures Python output is sent directly to terminal without buffering.
 
-### API endpoints
+## API endpoints
 
 The Flask backend application has the following endpoints:
 
-- `/dashboard/services`:
+#### Services
+
+```http
+GET /dashboard/servicces
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|           |      |             |
+
+List all Services with their related Incidents
+
+```javascript
+{
+  "total" : integer,
+  "services" : array,
+}
+```
+
+The `total` attribute contains the total records.
+
+The `services` attribute contains the Services array.
+
+| Parameter | Type     | Description                        |
+| :-------- | :------- | :--------------------------------- |
+| `api_key` | `string` | **Required**. Your Gophish API key |
+
+by isaiascardenas
