@@ -1,8 +1,11 @@
 from pydantic import BaseModel, ConfigDict
+from typing import Optional
+from .service_schema import Service
 
 
 class TeamCreate(BaseModel):
     name: str
+    services: Optional[list[Service]] = []
 
 
 class Team(TeamCreate):

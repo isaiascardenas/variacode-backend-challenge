@@ -1,21 +1,116 @@
-use pager_duty;
+USE pager_duty;
 
+DROP TABLE IF EXISTS escalation_policy_team;
+DROP TABLE IF EXISTS incidents;
+DROP TABLE IF EXISTS services;
+DROP TABLE IF EXISTS escalation_policies;
+DROP TABLE IF EXISTS team_user;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS teams;
 
 CREATE TABLE IF NOT EXISTS teams (
-    id varchar(255) not null,
-    name varchar(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+  id VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS users (
-    id varchar(255) not null,
-    name varchar(255) NOT NULL,
-    email varchar(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+  id VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS team_user (
+  team_id VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_team_user_team_id
+  FOREIGN KEY (team_id)
+  REFERENCES teams (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+
+  user_id VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_team_user_user_id
+  FOREIGN KEY (user_id)
+  REFERENCES users (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS escalation_policies (
+  id VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS services (
+  id VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+
+  team_id VARCHAR(255),
+  CONSTRAINT fk_services_team_id
+  FOREIGN KEY (team_id)
+  REFERENCES teams (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+
+  escalation_policy_id VARCHAR(255),
+  CONSTRAINT fk_services_escalation_policy_id
+  FOREIGN KEY (escalation_policy_id)
+  REFERENCES escalation_policies (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS incidents (
+  id VARCHAR(255) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  status VARCHAR(255),
+
+  service_id VARCHAR(255),
+  CONSTRAINT fk_incidents_service_id
+  FOREIGN KEY (service_id)
+  REFERENCES services (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+
+  escalation_policy_id VARCHAR(255),
+  CONSTRAINT fk_incidents_escalation_policy_id
+  FOREIGN KEY (escalation_policy_id)
+  REFERENCES escalation_policies (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS escalation_policy_team (
+  escalation_policy_id VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_escalation_policy_team_escalation_policy_id
+  FOREIGN KEY (escalation_policy_id)
+  REFERENCES escalation_policies (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE,
+
+  team_id VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_escalation_policy_team_team_id
+  FOREIGN KEY (team_id)
+  REFERENCES teams (id)
+  ON DELETE CASCADE
+  ON UPDATE CASCADE
 );

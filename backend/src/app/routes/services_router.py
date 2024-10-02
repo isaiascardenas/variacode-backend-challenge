@@ -11,7 +11,23 @@ def list_services():
     session = g.session
     services_list = ServicesController(session).list_services()
 
-    return [service.model_dump(mode="json") for service in services_list]
+    return {
+        "total": len(services_list),
+        "services": [service.model_dump(mode="json") for service in services_list],
+    }
+
+
+@service_blueprint.route("/incidents")
+def get_incidents():
+    session = g.session
+    services_list = ServicesController(session).get_grouped_incidents()
+
+    return services_list
+
+    # return {
+    #     "total": len(services_list),
+    #     "services": [service.model_dump(mode="json") for service in services_list],
+    # }
 
 
 @service_blueprint.route("/create")
