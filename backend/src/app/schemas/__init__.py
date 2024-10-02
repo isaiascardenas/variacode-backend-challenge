@@ -3,7 +3,8 @@ from .team_schema import Team
 from .service_schema import Service
 from .incident_schema import Incident
 from .escalation_policy_schema import EscalationPolicy
-from .dashboard_schema import (
+from .report_schema import (
+    ExistingServices,
     IncidentsPerService,
     IncidentsByServiceAndStatus,
     TeamsWithServices,
@@ -17,6 +18,7 @@ __all__ = [
     "Service",
     "Incident",
     "EscalationPolicy",
+    "ExistingServices",
     "IncidentsPerService",
     "IncidentsByServiceAndStatus",
     "TeamsWithServices",

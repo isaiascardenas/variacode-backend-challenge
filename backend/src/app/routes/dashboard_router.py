@@ -1,7 +1,6 @@
-from flask import Blueprint, Response, g, request
+from flask import Blueprint, g, request
 
 from app.controllers.dashboard_controller import DashboardController
-from app.services.report_service.report_service import get_csv_string
 
 dashboard_blueprint = Blueprint("dashbaord", __name__, url_prefix="/dashboard")
 
@@ -10,10 +9,14 @@ dashboard_blueprint = Blueprint("dashbaord", __name__, url_prefix="/dashboard")
 def list_services():
     session = g.session
     services_list = DashboardController(session).get_services()
+    serialized_services = [service.model_dump(mode="json") for service in services_list]
 
     return {
         "total": len(services_list),
-        "services": [service.model_dump(mode="json") for service in services_list],
+        "services": [
+            dict({k: v for k, v in service.items() if k not in {"incidents"}})
+            for service in serialized_services
+        ],
     }
 
 
@@ -80,5 +83,4 @@ def get_escalation_policies():
     return {
         "total": len(serialized_ep),
         "escalation_policies": serialized_ep,
-        # "teams": [dict(ep, services_count=len(ep["services"])) for ep in serialized_ep],
     }

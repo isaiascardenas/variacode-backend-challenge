@@ -1,6 +1,12 @@
 from pydantic import BaseModel
 
 
+class ExistingServices(BaseModel):
+    service_id: str
+    service_name: str
+    incidents_count: int
+
+
 class IncidentsPerService(BaseModel):
     service_id: str
     service_name: str
