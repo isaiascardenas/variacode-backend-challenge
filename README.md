@@ -31,26 +31,37 @@ First we need to setup the environment variables used by the Flask application.
 
 ## Environment Variables
 
-We set environment variables to configure Python behavior:
+The `.env.example` includes the following environment variables:
 
-- `PYTHONDONTWRITEBYTECODE`: Prevents Python from writing pyc files to disk.
-- `PYTHONUNBUFFERED`: Ensures Python output is sent directly to terminal without buffering.
+- `FLASK_APP`: Flask application name
+- `FLASK_ENV`: Environment, util for debug mode
+- `FLASK_RUN_PORT`: Port configuration for Flask app
+- `FLASK_RUN_HOST`: Host configuration for Flask app
+- `DATABASE_HOST`: Database host configuration
+- `DATABASE_PORT`: Database port configuration
+- `DATABASE_NAME`: Database name configuration
+- `DATABASE_USER`: Database user access configuration
+- `DATABASE_PASSWORD`: Database password access configuration
+- `DATABASE_ECHO`: Database echo mode, for queries debug mode
+- `PAGER_DUTY_API_KEY`: Pager Duty api key, for database seeder
+- `PAGER_DUTY_API_ENDPOINT`: Pager Duty API endpoint, for database seeder
 
 ## API endpoints
 
 The Flask backend application has the following endpoints:
 
-#### Services
+### Services
+
+List all Services
 
 ```http
-GET /dashboard/servicces
+GET /dashboard/services
 ```
 
 | Parameter | Type | Description |
 | :-------- | :--- | :---------- |
 |           |      |             |
 
-List all Services with their related Incidents
 
 ```javascript
 {
@@ -63,8 +74,101 @@ The `total` attribute contains the total records.
 
 The `services` attribute contains the Services array.
 
-| Parameter | Type     | Description                        |
-| :-------- | :------- | :--------------------------------- |
-| `api_key` | `string` | **Required**. Your Gophish API key |
+### Services with Incidents
 
-by isaiascardenas
+List all Services with their related Incidents
+
+```http
+GET /dashboard/services/incidents
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|           |      |             |
+
+
+```javascript
+{
+  "total" : integer,
+  "services" : array,
+}
+```
+
+The `total` attribute contains the total records.
+
+The `services` attribute contains the Services array.
+
+### Incidents
+
+List all Incidents filtered by `status` or `service_id`
+
+```http
+GET /dashboard/incidents?search_by={value}&search_value={value}
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|  `search_by` | `string` |  **Optional**. Allowed values: `status`, `service_id` |
+|  `search_value` | `string` |  **Optional**. An Incident's status or a Service id |
+
+
+```javascript
+{
+  "total" : integer,
+  "incidents" : array,
+}
+```
+
+The `total` attribute contains the total records.
+
+The `incidents` attribute contains the Incidents array.
+
+### Teams with Services
+
+List all Teams with their related Services
+
+```http
+GET /dashboard/teams/services
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|           |      |             |
+
+```javascript
+{
+  "total" : integer,
+  "teams" : array,
+}
+```
+
+The `total` attribute contains the total records.
+
+The `teams` attribute contains the Teams array.
+
+### Escalation Policies
+
+List all Escalation policies with their related Teams and Services
+
+```http
+GET /dashboard/escalation_policies
+```
+
+| Parameter | Type | Description |
+| :-------- | :--- | :---------- |
+|           |      |             |
+
+```javascript
+{
+  "total" : integer,
+  "escalation_policies" : array,
+}
+```
+
+The `total` attribute contains the total records.
+
+The `escalation_policies` attribute contains the Escalation policies array.
+
+<br/>
+<br/>
+<i>by isaiascardenas</i>
